@@ -20,7 +20,6 @@ typedef enum {
 
 typedef struct {
   StatementType type;
-  // Fields for INSERT statement
   int id;
   char username[32];
   char email[255];
@@ -45,7 +44,6 @@ typedef struct {
   size_t num_rows;
 } Table;
 
-// Function prototypes
 InputBuffer* new_input_buffer();
 void print_prompt();
 void read_input(InputBuffer* input_buffer);
@@ -56,11 +54,10 @@ void execute_statement(Statement* statement, Table* table);
 void execute_insert(Statement* statement, Table* table);
 void execute_select(Table* table);
 
-// Function implementations
 InputBuffer* new_input_buffer() {
   InputBuffer* input_buffer = (InputBuffer*)malloc(sizeof(InputBuffer));
-  input_buffer->buffer = NULL;
-  input_buffer->buffer_length = 0;
+  input_buffer->buffer = (char*)malloc(1024);
+  input_buffer->buffer_length = 1024;
   input_buffer->input_length = 0;
   return input_buffer;
 }
