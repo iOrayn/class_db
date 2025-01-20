@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -g
-SOURCES=src/main.c src/repl.c 
+SOURCES=src/main.c src/repl.c src/btree.c 
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=db
 

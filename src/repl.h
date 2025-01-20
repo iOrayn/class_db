@@ -4,45 +4,44 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-#define TABLE_MAX_ROWS 100
-
 typedef enum {
-  META_COMMAND_SUCCESS,
-  META_COMMAND_UNRECOGNIZED_COMMAND
+    META_COMMAND_SUCCESS,
+    META_COMMAND_UNRECOGNIZED_COMMAND
 } MetaCommandResult;
 
-typedef enum { 
-  PREPARE_SUCCESS, 
-  PREPARE_UNRECOGNIZED_STATEMENT 
+typedef enum {
+    PREPARE_SUCCESS,
+    PREPARE_UNRECOGNIZED_STATEMENT
 } PrepareResult;
 
-typedef enum { 
-  STATEMENT_INSERT, 
-  STATEMENT_SELECT 
+typedef enum {
+    STATEMENT_INSERT,
+    STATEMENT_SELECT
 } StatementType;
 
 typedef struct {
-  StatementType type;
-  int id;
-  char username[32];
-  char email[255];
+    StatementType type;
+    int id;
+    char username[32];
+    char email[255];
 } Statement;
 
 typedef struct {
-  char* buffer;
-  size_t buffer_length;
-  ssize_t input_length;
+    char* buffer;
+    size_t buffer_length;
+    ssize_t input_length;
 } InputBuffer;
 
 typedef struct {
-  int id;
-  char username[32];
-  char email[255];
+    int id;
+    char username[32];
+    char email[255];
 } Row;
 
+typedef struct TreeNode TreeNode;
 typedef struct {
-  Row rows[TABLE_MAX_ROWS];
-  size_t num_rows;
+    TreeNode* root;  
+    size_t num_rows; 
 } Table;
 
 InputBuffer* new_input_buffer();
@@ -57,4 +56,3 @@ void execute_select(Table* table);
 void repl();
 
 #endif
-
