@@ -16,7 +16,8 @@ typedef enum {
 
 typedef enum {
     STATEMENT_INSERT,
-    STATEMENT_SELECT
+    STATEMENT_SELECT,
+    STATEMENT_DELETE
 } StatementType;
 
 typedef struct {
@@ -52,7 +53,7 @@ MetaCommandResult do_meta_command(InputBuffer* input_buffer);
 PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement);
 void execute_statement(Statement* statement, Table* table);
 void execute_insert(Statement* statement, Table* table);
-void execute_select(Table* table);
+void execute_select(Statement* statement, Table* table);
 void repl();
 
 #endif

@@ -16,6 +16,17 @@ void print_prompt() {
     printf("db > ");
 }
 
+void print_help() {
+    printf("Welcome to the database C Project Made By Dylan 3SI3!\n");
+    printf("Available commands:\n");
+    printf("  insert <id> <username> <email>   - Insert a new record into the database\n");
+    printf("  select                          - Display all records in the database\n");
+    printf("  select <id>                     - Display a specific record by ID\n");
+    printf("  delete <id>                     - Delete a record by ID\n");
+    printf("  .exit                           - Exit the application\n");
+    printf("\n");
+}
+
 void read_input(InputBuffer* input_buffer) {
     if (input_buffer->buffer == NULL) {
         input_buffer->buffer = malloc(1024);
@@ -56,9 +67,24 @@ PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement)
         statement->type = STATEMENT_INSERT;
         return PREPARE_SUCCESS;
     }
-    if (strcmp(input_buffer->buffer, "select") == 0) {
-        statement->type = STATEMENT_SELECT;
-        return PREPARE_SUCCESS;
+    if (strncmp(input_buffer->buffer, "select", 6) == 0) {
+        int args_assigned = sscanf(input_buffer->buffer, "select %d", &statement->id);
+        if (args_assigned == 1) {
+            statement->type = STATEMENT_SELECT;
+            return PREPARE_SUCCESS;
+        } else {
+            statement->type = STATEMENT_SELECT;
+            statement->id = -1; 
+            return PREPARE_SUCCESS;
+        }
+    }
+    if (strncmp(input_buffer->buffer, "delete", 6) == 0) {
+        int args_assigned = sscanf(input_buffer->buffer, "delete %d", &statement->id);
+        if (args_assigned == 1) {
+            statement->type = STATEMENT_DELETE;
+            return PREPARE_SUCCESS;
+        }
+        return PREPARE_UNRECOGNIZED_STATEMENT;
     }
     return PREPARE_UNRECOGNIZED_STATEMENT;
 }
@@ -69,7 +95,11 @@ void execute_statement(Statement* statement, Table* table) {
             execute_insert(statement, table);
             break;
         case STATEMENT_SELECT:
-            execute_select(table);
+            execute_select(statement, table);
+            break;
+	case STATEMENT_DELETE:
+	    table->root = delete_by_id(table->root, statement->id);
+            printf("Deleted ID %d.\n", statement->id);
             break;
     }
 }
@@ -79,17 +109,31 @@ void execute_insert(Statement* statement, Table* table) {
     strcpy(row.username, statement->username);
     strcpy(row.email, statement->email);
 
-    insert_row(table, &row);
-    printf("Inserted.\n");
+    if (insert_row(table, &row)) {
+        printf("Inserted.\n"); 
+    }
 }
 
-void execute_select(Table* table) {
-    btree_select(table);
+
+void execute_select(Statement* statement, Table* table) {
+    if (statement->id == -1) {
+        btree_select(table);
+    } else {
+        Row* result = find_by_id(table->root, statement->id);
+        if (result != NULL) {
+            printf("(%d, %s, %s)\n", result->id, result->username, result->email);
+        } else {
+            printf("No record found with ID %d.\n", statement->id);
+        }
+    }
 }
+
+
 
 void repl() {
     Table table = { .root = NULL, .num_rows = 0 };
     InputBuffer* input_buffer = new_input_buffer();
+    print_help();
 
     while (true) {
         print_prompt();
