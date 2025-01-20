@@ -1,7 +1,10 @@
 # class_db
 
+- **Nom**: Dylan Klein  
+- **Classe**: 3SI3  
+
 ## Description
-Un projet de base de données simple en C utilisant un arbre binaire pour stocker les données. Les commandes supportées sont `INSERT` et `SELECT`.
+Un projet de base de données simple en C utilisant un arbre binaire pour stocker les données. Les commandes supportées sont `INSERT`, `SELECT` et `DELETE`.
 
 ## Structure du Projet
 - `src/`: Contient les fichiers source C.
@@ -11,6 +14,5 @@ Un projet de base de données simple en C utilisant un arbre binaire pour stocke
 - `Makefile`: Utilisé pour compiler le projet.
 - `README.md`: Description du projet.
 
-## Compilation
-Pour compiler le projet, utilisez la commande suivante :
+
 
